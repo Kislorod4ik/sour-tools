@@ -15,10 +15,10 @@ module.exports = class TelegrafTools {
 
 	loadComponent(name, dirpath, extra = {}){
 		extra.file_extension ??= "js";
-		return require(`${process.mainModule.path}${dirpath ?? ''}/${name}.${extra.file_extension}`)(this.bot.context, this.bot);
+		return require(`${process.cwd()}/${dirpath ?? ''}/${name}.${extra.file_extension}`)(this.bot.context, this.bot);
 	}
 
-	loadLibrary(nameS, dirpath = "/libs", extra = {}){
+	loadLibrary(nameS, dirpath = "libs", extra = {}){
 		if (typeof(nameS) === "string") nameS = [nameS]
 		nameS.forEach(name => {
 			if(this.extra.loging) this.logger.info("Загрузка билиотеки: ", `${dirpath}/${name}`);
@@ -27,7 +27,7 @@ module.exports = class TelegrafTools {
 		})
 	}
 
-	loadMiddleware(nameS, dirpath = "/mws", extra = {}) {
+	loadMiddleware(nameS, dirpath = "mws", extra = {}) {
 		if (typeof(nameS) === "string") nameS = [nameS]
 		nameS.forEach(name => {
 			if(this.extra.loging) this.logger.info("Загрузка миддлвара: ", `${dirpath}/${name}`);

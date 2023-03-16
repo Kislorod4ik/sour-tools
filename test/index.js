@@ -29,8 +29,8 @@ telegrafTools.loadMiddleware("testMiddleware");
 // так же есть возможность загружать список миддлвары: loadMiddleware(["testMiddleware", "testMiddleware2", "testMiddleware3"])
 
 // Загружаем библиотеку, который подтянется из ./libs_2/settings.js и запишется в context.
-// Если не указывать вторым аргументом "/libs_2", то изначальная директория: "libs". В "loadMiddleware" изначальная директория "mws"
-telegrafTools.loadLibrary(["settings", "start"], "/libs_2")
+// Если не указывать вторым аргументом "libs_2", то изначальная директория: "libs". В "loadMiddleware" изначальная директория "mws"
+telegrafTools.loadLibrary(["settings", "start"], "libs_2")
 // также как и в "loadMiddleware" есть возможность загрузить библиотеки списком
 
 

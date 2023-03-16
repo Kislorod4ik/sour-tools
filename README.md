@@ -362,12 +362,12 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const telegrafTools = new TelegrafTools(bot);
 bot.context.logger.success("TelegrafTools был инициализирован");
 
-// loadLibrary( nameS, ?dirpath="/libs", ?extra={ ?file_extension="js" } )
+// loadLibrary( nameS, ?dirpath="libs", ?extra={ ?file_extension="js" } )
 telegrafTools.loadLibrary("testLib"); 
 console.log(bot.context.testLib.info); // -> "info testLib"
 console.log(bot.context.testLib.customGetInfo()); // -> "info testLib"
 
-// loadMiddleware( nameS,  ?dirpath="/mws", ?extra={ ?file_extension="js" } )
+// loadMiddleware( nameS,  ?dirpath="mws", ?extra={ ?file_extension="js" } )
 telegrafTools.loadMiddleware(["testMw"/*, "testMw2"*/]); // Применяет файл на bot.use
 
 bot.start(async ctx => {
