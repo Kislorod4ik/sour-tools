@@ -174,25 +174,31 @@ console.log(times.differenceTime( new Date().getTime() + 10000, new Date())); //
 // summTime( ?val_1=new Date(), ?val_2=new Date() )
 console.log(times.summTime( new Date(), 3 * 60 * 60 * 1000)); // -> Время сейчас + 3ч 
 
-// processingTime (val)
+/* processingTime (val, ?extra={
+  ?sep=" ", (Соеденение между значениями)
+  ?skip_zero=true, (Пропускать-ли значения равные нулю при сборке .str)
+  ?body=["years", "weeks", "days", "hours", "minutes", "seconds", "milliseconds"], (Данные которые будут рассчитываться),
+  ?formatting={ (Обозначения)
+      ?years="г";
+      ?weeks="н";
+      ?days="д";
+      ?hours="ч";
+      ?minutes="м";
+      ?seconds="с";
+      ?milliseconds="мс";
+  }
+}) */
 console.log(times.processingTime(times.differenceTime(
   new Date(),
   new Date().getTime() - 30 * 24 * 60 * 60 * 1000
-)));
-/*
-Расчет разницы во времени, с дальшейним преобразованием
----> {
-  years: 0,
-  weeks: 4,
-  days: 2,
-  hours: 0,
-  minutes: 0,
-  seconds: 0,
-  milliseconds: 0,
-  str: '4н 2д '
-}
-*/
+), {sep: ", "}));
+// ---> {years: 0, weeks: 4, days: 2, hours: 0, minutes: 0, seconds: 0, milliseconds: 0, str: '4н, 2д '}
 
+console.log(times.processingTime(times.differenceTime(
+  new Date(),
+  new Date().getTime() - 30 * 24 * 59 * 60 * 1000
+), {skip_zero: false, body: ["years", "days", "minutes"], formatting: {years: "y"}}));
+// ---> { years: 0, days: 29, minutes: 720, str: '0y 29д 720м' }
 ```
 
 <h2 id="formatting">Форматирование</h2>

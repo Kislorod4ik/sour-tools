@@ -23,29 +23,55 @@ module.exports = {
 	getTime, getDate,
 	differenceTime: (time1, time2) => Math.abs( getTime(time1) - getTime(time2)),
 	summTime: (time1, time2) => getTime(time1) + getTime(time2),
-	processingTime: (time) => {
+	processingTime: (time, extra = {}) => {
+		extra.body ??= ["years", "weeks", "days", "hours", "minutes", "seconds", "milliseconds"];
+		extra.sep ??= " ";
+		extra.skip_zero ??= true;
+		extra.formatting ??= {};
+		extra.formatting.years ??= "г";
+		extra.formatting.weeks ??= "н";
+		extra.formatting.days ??= "д";
+		extra.formatting.hours ??= "ч";
+		extra.formatting.minutes ??= "м";
+		extra.formatting.seconds ??= "с";
+		extra.formatting.milliseconds ??= "мс";
+
+		const methods = new Set(extra.body);
 		let t = getTime(time);
 		const back = {};
-		back.years = Math.floor( t / 31536000000 );
-		t %= 31536000000;
-		back.weeks = Math.floor( t / 604800000 );
-		t %= 604800000;
-		back.days = Math.floor( t / 86400000 );
-		t %= 86400000;
-		back.hours = Math.floor( t / 3600000 );
-		t %= 3600000;	
-		back.minutes = Math.floor( t / 60000 );
-		t %= 60000;	
-		back.seconds = Math.floor(t / 1000 );
+		if (methods.has("years")){
+			back.years = Math.floor( t / 31536000000 );
+			t %= 31536000000;			
+		}	
+		if (methods.has("weeks")){
+			back.weeks = Math.floor( t / 604800000 );
+			t %= 604800000;			
+		}			
+		if (methods.has("days")){
+			back.days = Math.floor( t / 86400000 );
+			t %= 86400000;			
+		}
+		if (methods.has("hours")){
+			back.hours = Math.floor( t / 3600000 );
+			t %= 3600000;			
+		}	
+		if (methods.has("minutes")){
+			back.minutes = Math.floor( t / 60000 );
+			t %= 60000;			
+		}	
+		if (methods.has("seconds")){
+			back.seconds = Math.floor( t / 1000 );
+			t %= 1000;			
+		}	
+		if (methods.has("milliseconds")){
+			back.milliseconds = t;		
+		}	
+		
+		back.str = extra.body.reduce((result, key) => {
+			if (back[key] || !extra.skip_zero) result.push(back[key] + extra.formatting[key]);
+			return result
+		}, []).join(extra.sep)
 
-		back.milliseconds = Math.trunc(t);
-		back.str = (back.years ? `${back.years}г ` : '') + 
-			(back.weeks ? `${back.weeks}н ` : '') + 
-			(back.days ? `${back.days}д ` : '') +
-			(back.hours ? `${back.hours}ч ` : '') +
-			(back.minutes ? `${back.minutes}м ` : '') + 
-			(back.seconds ? `${back.seconds}с ` : '') +
-			(back.milliseconds ? `${back.milliseconds}мс ` : ''); 
 		if (back.str === '') back.str = '0'
 		return back;			
 	},
