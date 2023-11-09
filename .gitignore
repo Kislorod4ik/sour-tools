@@ -139,3 +139,5 @@ yarn-error.log
 .upm
 .config
 .cache
+
+.idea

@@ -42,7 +42,9 @@ module.exports = class Logger {
 		extra.date_format ??= "%d-%M-%y";
 
 		this.extra = extra;
-		if(!fs.existsSync(extra.dirpath)) fs.mkdirSync(extra.dirpath);
+		if(extra.to_file && !fs.existsSync(extra.dirpath)) {
+			fs.mkdirSync(extra.dirpath);
+		}
 	}
 
 	toStringValue(value) {
