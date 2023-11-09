@@ -1,10 +1,9 @@
 const fs = require("fs");
 const Logger = require("./Logger");
 
-const logger = new Logger();
-
 module.exports = class Localization {
 	constructor(dirpath, extra={}){
+		this.logger = new Logger();
 		this.dirpath = dirpath ?? "langs";
 		this.extra = extra;
 		this.langs = [];
@@ -19,9 +18,9 @@ module.exports = class Localization {
 		content.split('\n').forEach( (line, i) => {
 			if (!line) return;
 			const match = line.match(/([^=]+)=(.+)/);
-			if (!match) return logger.warn("[LOCALIZATION]", `Ошибка считвание файла-локализации (${this.dirpath}/${filename}). Строка №${i}, полная строка: "${line}".`, "Строка была пропущена!");
+			if (!match) return this.logger.warn("[LOCALIZATION]", `Ошибка считвание файла-локализации (${this.dirpath}/${filename}). Строка №${i}, полная строка: "${line}".`, "Строка была пропущена!");
 			const [, id, body] = match;
-			if (obj[id]) return logger.warn("[LOCALIZATION]", `Повторяется локализация (${this.dirpath}/${filename}). Строка №${i}, индификатор: "${id}".`, "Строка была перезаписана!");
+			if (obj[id]) return this.logger.warn("[LOCALIZATION]", `Повторяется локализация (${this.dirpath}/${filename}). Строка №${i}, индификатор: "${id}".`, "Строка была перезаписана!");
 			obj[id] = body;
 		})
 		return obj;		
@@ -38,7 +37,7 @@ module.exports = class Localization {
 			this.extra.default_lang ??= this.langs[0]
 		}
 		else {
-			logger.error('[LOCALIZATION]', `Не найдено ни одного файла .lang в директории: "${this.dirpath}"`)
+			this.logger.error('[LOCALIZATION]', `Не найдено ни одного файла .lang в директории: "${this.dirpath}"`)
 			throw new Error(`Не найдено ни одного файла .lang в директории: "${this.dirpath}"`)
 		}
 		
