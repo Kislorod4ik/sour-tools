@@ -41,6 +41,7 @@ module.exports = class Logger {
 		extra.time_format ??= "%h:%m:%s.%S";
 		extra.date_format ??= "%d-%M-%y";
 
+		this.onLogFunction = null;
 		this.extra = extra;
 		if(extra.to_file && !fs.existsSync(extra.dirpath)) {
 			fs.mkdirSync(extra.dirpath);
@@ -75,11 +76,15 @@ module.exports = class Logger {
 	
 
 	write(prefix, args, prefixColor) {
-		console.log(this.processColor(`&r&8[&${prefixColor}${prefix}&8][&f${times.timeFormatUTC(this.extra.time_format)}&8] &f${args.map(e => this.toStringValue(e)).join(' ')}`))
+		const line = `&r&8[&${prefixColor}${prefix}&8][&f${times.timeFormatUTC(this.extra.time_format)}&8] &f${args.map(e => this.toStringValue(e)).join(' ')}`;
+		console.log(this.processColor(line))
 		if (this.extra.to_file) {
-			const logname = times.timeFormatUTC(`${this.extra.date_format}.log`);
-			fs.appendFileSync(`${this.extra.dirpath}/${logname}`, `[${prefix}][${times.timeFormatUTC(this.extra.time_format)}] ${args.map(e => this.processClearColor(e)).join(' ')}\n`);
-		}		
+			const logFileName = times.timeFormatUTC(`${this.extra.date_format}.log`);
+			fs.appendFileSync(`${this.extra.dirpath}/${logFileName}`, `${this.processClearColor(line)}\n`);
+		}
+		if (this.onLogFunction) {
+			this.onLogFunction(line)
+		}
 	}
 
 	log(...args) {
